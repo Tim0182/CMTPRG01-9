@@ -10,6 +10,8 @@ class Game {
 
         let player : Player = new Player();
         this.gameObjects.push(player);
+        let meteor : Meteor = new Meteor();
+        this.gameObjects.push(meteor);
 
         requestAnimationFrame(() => this.update());
     }

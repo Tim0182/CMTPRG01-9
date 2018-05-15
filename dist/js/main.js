@@ -4,6 +4,8 @@ var Game = (function () {
         this.gameObjects = new Array();
         var player = new Player();
         this.gameObjects.push(player);
+        var meteor = new Meteor();
+        this.gameObjects.push(meteor);
         requestAnimationFrame(function () { return _this.update(); });
     }
     Game.getInstance = function () {
@@ -32,6 +34,27 @@ var Game = (function () {
 window.addEventListener("load", function () {
     Game.getInstance();
 });
+var Meteor = (function () {
+    function Meteor() {
+        this.createMeteor();
+    }
+    Meteor.prototype.createMeteor = function () {
+        this.div = document.createElement("meteor");
+        document.body.appendChild(this.div);
+        this.x = 100;
+        this.y = 200;
+        this.rotation = 0;
+        this.rotationSpeed = Math.random();
+    };
+    Meteor.prototype.update = function () {
+        this.rotation += this.rotationSpeed;
+        this.rectangle = this.div.getBoundingClientRect();
+    };
+    Meteor.prototype.draw = function () {
+        this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
+    };
+    return Meteor;
+}());
 var Player = (function () {
     function Player() {
         this.createPlayer();

@@ -1,9 +1,9 @@
 class Player implements GameObject {
     
-    public x : number;
-    public y : number;
-    public div : HTMLElement;
-    public rectangle : ClientRect;
+    private x : number;
+    private y : number;
+    private div : HTMLElement;
+    private rectangle : ClientRect;
     private shootBehavior : IshootBehavior;
     
     constructor() {

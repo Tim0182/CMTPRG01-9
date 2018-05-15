@@ -14,6 +14,12 @@ body * {
     background-repeat: no-repeat;
 }
 
+meteor {
+    background-image: url(./../img/bigMeteor.png);
+    width: 89px;
+    height: 82px;
+}
+
 player {
     background-image: url(./../img/player.png);
     width: 93px;
