@@ -25,3 +25,8 @@ player {
     width: 93px;
     height: 84px;
 }
+
+/* Browser Sync script tag disabler */
+#__bs_script__ {
+    display: none;
+}
