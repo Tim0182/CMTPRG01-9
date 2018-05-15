@@ -1,8 +1,10 @@
 class Game {
 
+    private static instance : Game;
+
     private gameObjects     : Array<GameObject>;
     
-    constructor() {
+    private constructor() {
 
         this.gameObjects = new Array<GameObject>();
 
@@ -10,6 +12,13 @@ class Game {
         this.gameObjects.push(player);
 
         requestAnimationFrame(() => this.update());
+    }
+
+    public static getInstance() {
+        if (! Game.instance) {
+            Game.instance = new Game()
+            }
+        return Game.instance
     }
 
     private update(){

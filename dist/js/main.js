@@ -6,6 +6,12 @@ var Game = (function () {
         this.gameObjects.push(player);
         requestAnimationFrame(function () { return _this.update(); });
     }
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    };
     Game.prototype.update = function () {
         for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
             var obj = _a[_i];
@@ -24,7 +30,7 @@ var Game = (function () {
     return Game;
 }());
 window.addEventListener("load", function () {
-    new Game();
+    Game.getInstance();
 });
 var Player = (function () {
     function Player() {
