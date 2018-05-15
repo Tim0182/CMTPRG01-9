@@ -39,17 +39,15 @@ var Player = (function () {
     Player.prototype.createPlayer = function () {
         this.div = document.createElement("player");
         document.body.appendChild(this.div);
-        this.x = 250;
-        this.y = window.innerHeight / 2 - this.div.clientHeight;
+        this.x = window.innerWidth / 12;
+        this.y = window.innerHeight / 2 - this.div.clientHeight / 2;
         this.shootBehavior = new SingleShot();
     };
     Player.prototype.setShootBehavior = function (behavior) {
         this.shootBehavior = behavior;
     };
     Player.prototype.update = function () {
-        this.shootBehavior.shoot();
-        this.setShootBehavior(new MultiShot());
-        this.shootBehavior.shoot();
+        this.rectangle = this.div.getBoundingClientRect();
     };
     Player.prototype.draw = function () {
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(270deg)";

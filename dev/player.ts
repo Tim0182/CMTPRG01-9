@@ -3,6 +3,7 @@ class Player implements GameObject {
     public x : number;
     public y : number;
     public div : HTMLElement;
+    public rectangle : ClientRect;
     private shootBehavior : IshootBehavior;
     
     constructor() {
@@ -12,8 +13,8 @@ class Player implements GameObject {
     private createPlayer() {
         this.div = document.createElement("player");
         document.body.appendChild(this.div);
-        this.x = 250;
-        this.y = window.innerHeight / 2 - this.div.clientHeight;
+        this.x = window.innerWidth / 12;
+        this.y = window.innerHeight / 2 - this.div.clientHeight / 2;
         this.shootBehavior = new SingleShot();
     }
 
@@ -22,9 +23,7 @@ class Player implements GameObject {
     }
 
     public update(): void {
-        this.shootBehavior.shoot();
-        this.setShootBehavior(new MultiShot());
-        this.shootBehavior.shoot();
+        this.rectangle = this.div.getBoundingClientRect();
     }
 
     public draw(): void {
