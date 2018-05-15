@@ -3,7 +3,11 @@ class Meteor implements GameObject {
     private x : number;
     private y : number;
     private rotation : number;
+
+    private xSpeed : number;
+    private ySpeed : number;
     private rotationSpeed : number;
+
     private div : HTMLElement;
     private rectangle : ClientRect;
 
@@ -11,17 +15,53 @@ class Meteor implements GameObject {
         this.createMeteor();
     }
 
+    public getRect() {
+        return this.rectangle;
+    }
+
     private createMeteor() {
         this.div = document.createElement("meteor");
         document.body.appendChild(this.div);
+
         this.x = 100;
         this.y = 200;
         this.rotation = 0;
-        this.rotationSpeed = Math.random()
+
+        this.xSpeed = Math.random() < 0.5 ?
+        Math.random() - 1 * 1.5 :
+        Math.random() * 1.5;
+        
+        this.ySpeed = Math.random() < 0.5 ?
+        Math.random() - 1 * 1.5 :
+        Math.random() * 1.5;
+
+        this.rotationSpeed = Math.random()*2;
+    }
+
+    private move() {
+        this.x += this.xSpeed;
+        this.y += this.ySpeed;
+        this.rotation += this.rotationSpeed;
+
+        if (this.x + this.div.clientWidth < 0) {
+            this.x = window.innerWidth;
+        }
+
+        if (this.x > window.innerWidth) {
+            this.x = 0 - this.div.clientWidth;
+        }
+        
+        if (this.y + this.div.clientHeight < 0) {
+            this.y = window.innerHeight;
+        }
+
+        if (this.y > window.innerHeight) {
+            this.y = 0 - this.div.clientHeight;
+        }
     }
     
     public update(): void {
-        this.rotation += this.rotationSpeed;
+        this.move();
         this.rectangle = this.div.getBoundingClientRect();
     }
 

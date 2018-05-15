@@ -8,13 +8,23 @@ class Game {
 
         this.gameObjects = new Array<GameObject>();
 
-        let player : Player = new Player();
-        this.gameObjects.push(player);
-        let meteor : Meteor = new Meteor();
-        this.gameObjects.push(meteor);
+        // let audio = new Audio('./../bgm/sc2.mp3');
+        // audio.play();
+
+
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Meteor());
+        this.gameObjects.push(new Player());
 
         requestAnimationFrame(() => this.update());
     }
+
+    
 
     public static getInstance() {
         if (! Game.instance) {

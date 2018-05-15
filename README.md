@@ -34,11 +34,12 @@ Make sure to execute this command in the /dist directory and not the root folder
 
 ## Pull request
 
+Coming soon™
 
 
 ## Peer review
 
-
+Coming soon™
 
 ## Authors
 
