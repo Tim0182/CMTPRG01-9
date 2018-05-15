@@ -1,7 +1,21 @@
 body {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size:20px;
     overflow:hidden;
     margin:0px; padding:0px;
-    background-color:#000;
+    background-image: url(./../img/background.png);
+    background-repeat: repeat;
+
+}
+
+body * {
+    position: absolute;
+    display: block;
+    margin:0px; padding:0px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+}
+
+player {
+    background-image: url(./../img/player.png);
+    width: 93px;
+    height: 84px;
 }

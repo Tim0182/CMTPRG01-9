@@ -3,6 +3,12 @@ class Game {
     private gameObjects     : Array<GameObject>;
     
     constructor() {
+
+        this.gameObjects = new Array<GameObject>();
+
+        let player : Player = new Player();
+        this.gameObjects.push(player);
+
         requestAnimationFrame(() => this.update());
     }
 
