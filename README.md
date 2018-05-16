@@ -1,8 +1,8 @@
-# CMTPRG01-8
+#  ![](https://raw.githubusercontent.com/ArnovanDoesburg/CMTPRG01-8/feature/Collision/dist/img/meteor/tiny2.png) CMTPRG01-8 ![](https://raw.githubusercontent.com/ArnovanDoesburg/CMTPRG01-8/feature/Collision/dist/img/meteor/tiny1.png)
 
 This project was made on behalf of the Rotterdam University of Applied Sciences.
 
-## Getting Started
+## Getting Started 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
