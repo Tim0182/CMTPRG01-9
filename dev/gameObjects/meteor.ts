@@ -23,8 +23,8 @@ class Meteor implements GameObject {
         this.div = document.createElement("meteor");
         document.body.appendChild(this.div);
 
-        this.x = 100;
-        this.y = 200;
+        this.x = Math.floor((Math.random() * window.innerWidth) + 1);
+        this.y = Math.floor((Math.random() * window.innerHeight) + 1);
         this.rotation = 0;
 
         this.xSpeed = Math.random() < 0.5 ?
