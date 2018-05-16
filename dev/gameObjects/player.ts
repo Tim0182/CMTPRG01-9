@@ -3,6 +3,7 @@ class Player implements GameObject {
     private x : number;
     private y : number;
     private rotation : number;
+    private angle : number = 6;
     private div : HTMLElement;
     private rectangle : ClientRect;
     private shootBehavior : IshootBehavior;
@@ -21,16 +22,20 @@ class Player implements GameObject {
         this.shootBehavior = new SingleShot();
 
         cKeyboardInput.getInstance().addKeycodeCallback(37, () => {
-            this.turnLeft();
+            this.turn(-this.angle);
         });
+        cKeyboardInput.getInstance().addKeycodeCallback(39, () => {
+            this.turn(+this.angle);
+        });
+
     }
 
     public setShootBehavior(behavior : IshootBehavior) {
         this.shootBehavior = behavior;
     }
 
-    public turnLeft() : void {
-        this.rotation -= 3;
+    public turn(angle : number) : void {
+        this.rotation += angle;
     }
 
     public update(): void {

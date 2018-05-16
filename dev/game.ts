@@ -1,12 +1,12 @@
 class Game {
 
     private static instance : Game;
-    private gameObjects : Array<Meteor>;
+    private gameObjects : Array<GameObject>;
     private player : Player;
     
     private constructor() {
 
-        this.gameObjects = new Array<Meteor>();
+        this.gameObjects = new Array<GameObject>();
 
         this.gameObjects.push(new Meteor());
         this.gameObjects.push(new Meteor());
@@ -17,7 +17,7 @@ class Game {
         this.gameObjects.push(new Meteor());
 
         this.player = new Player();
-        // this.gameObjects.push(this.player);
+        this.gameObjects.push(this.player);
 
         requestAnimationFrame(() => this.update());
     }
@@ -29,24 +29,24 @@ class Game {
         return Game.instance
     }
 
-    private checkCollision () {
-        setTimeout(() => {
+    // private checkCollision () {
+    //     setTimeout(() => {
 
-            for(let obj of this.gameObjects) {
-                for(let item of this.gameObjects) {
-                    if(obj !== item) {
-                        if(this.intersects(obj.getRect(), item.getRect())) {
-                            obj.kys();
-                            item.kys();
-                        }
-                    }
-                }
-            }
+    //         for(let obj of this.gameObjects) {
+    //             for(let item of this.gameObjects) {
+    //                 if(obj !== item) {
+    //                     if(this.intersects(obj.getRect(), item.getRect())) {
+    //                         obj.kys();
+    //                         item.kys();
+    //                     }
+    //                 }
+    //             }
+    //         }
      
             
-        }, 2000);
+    //     }, 2000);
     
-    }
+    // }
 
     // private intersectRect(r1 : ClientRect, r2 : ClientRect) {
     //     return !(r2.left > r1.right || 
@@ -68,7 +68,7 @@ class Game {
             obj.update();
         }
         cKeyboardInput.getInstance().inputLoop();
-        this.checkCollision();
+        // this.checkCollision();
         this.draw();
     }
 

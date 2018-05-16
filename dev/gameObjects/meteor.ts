@@ -82,8 +82,8 @@ class Meteor implements GameObject {
     }
     
     public update() : void {
-        this.rectangle = this.div.getBoundingClientRect();
         this.move();
+        this.rectangle = this.div.getBoundingClientRect();
         
     }
 

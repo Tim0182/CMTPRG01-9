@@ -10,6 +10,7 @@ var Game = (function () {
         this.gameObjects.push(new Meteor());
         this.gameObjects.push(new Meteor());
         this.player = new Player();
+        this.gameObjects.push(this.player);
         requestAnimationFrame(function () { return _this.update(); });
     }
     Game.getInstance = function () {
@@ -17,23 +18,6 @@ var Game = (function () {
             Game.instance = new Game();
         }
         return Game.instance;
-    };
-    Game.prototype.checkCollision = function () {
-        var _this = this;
-        setTimeout(function () {
-            for (var _i = 0, _a = _this.gameObjects; _i < _a.length; _i++) {
-                var obj = _a[_i];
-                for (var _b = 0, _c = _this.gameObjects; _b < _c.length; _b++) {
-                    var item = _c[_b];
-                    if (obj !== item) {
-                        if (_this.intersects(obj.getRect(), item.getRect())) {
-                            obj.kys();
-                            item.kys();
-                        }
-                    }
-                }
-            }
-        }, 2000);
     };
     Game.prototype.intersects = function (a, b) {
         return !(b.left > a.right ||
@@ -47,7 +31,6 @@ var Game = (function () {
             obj.update();
         }
         cKeyboardInput.getInstance().inputLoop();
-        this.checkCollision();
         this.draw();
     };
     Game.prototype.draw = function () {
@@ -157,8 +140,8 @@ var Meteor = (function () {
         this.div.remove();
     };
     Meteor.prototype.update = function () {
-        this.rectangle = this.div.getBoundingClientRect();
         this.move();
+        this.rectangle = this.div.getBoundingClientRect();
     };
     Meteor.prototype.draw = function () {
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
@@ -167,6 +150,7 @@ var Meteor = (function () {
 }());
 var Player = (function () {
     function Player() {
+        this.angle = 6;
         this.moving = false;
         this.createPlayer();
     }
@@ -179,14 +163,17 @@ var Player = (function () {
         this.rotation = 270;
         this.shootBehavior = new SingleShot();
         cKeyboardInput.getInstance().addKeycodeCallback(37, function () {
-            _this.turnLeft();
+            _this.turn(-_this.angle);
+        });
+        cKeyboardInput.getInstance().addKeycodeCallback(39, function () {
+            _this.turn(+_this.angle);
         });
     };
     Player.prototype.setShootBehavior = function (behavior) {
         this.shootBehavior = behavior;
     };
-    Player.prototype.turnLeft = function () {
-        this.rotation -= 3;
+    Player.prototype.turn = function (angle) {
+        this.rotation += angle;
     };
     Player.prototype.update = function () {
         this.rectangle = this.div.getBoundingClientRect();
