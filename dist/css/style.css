@@ -15,7 +15,7 @@ body * {
 }
 
 meteor {
-    background-image: url(./../img/bigMeteor.png);
+    background-image: url(./../img/meteor/big2.png);
     width: 89px;
     height: 82px;
 }
