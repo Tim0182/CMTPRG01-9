@@ -18,18 +18,21 @@ body * {
     background-image: url(./../img/meteor/big1.png);
     width: 89px;
     height: 82px;
+    border: 1px solid red;
 }
 
 .big2 {
     background-image: url(./../img/meteor/big2.png);
     width: 101px;
     height: 84px;
+    border: 1px solid red;
 }
 
 .big3 {
     background-image: url(./../img/meteor/big3.png);
     width: 120px;
     height: 98px;
+    border: 1px solid red;
 }
 
 player {

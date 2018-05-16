@@ -15,6 +15,10 @@ class Meteor implements GameObject {
         this.createMeteor();
     }
 
+    public getRect() : ClientRect {
+        return this.rectangle;
+    }
+
     private createMeteor() {
 
         let random = Math.floor(Math.random() * 3) + 1;
@@ -72,10 +76,15 @@ class Meteor implements GameObject {
             this.y = 0 - this.div.clientHeight;
         }
     }
+
+    public kys() : void {
+        this.div.remove();
+    }
     
-    public update(): void {
-        this.move();
+    public update() : void {
         this.rectangle = this.div.getBoundingClientRect();
+        this.move();
+        
     }
 
     public draw(): void {
