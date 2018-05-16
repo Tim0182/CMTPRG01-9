@@ -24,8 +24,6 @@ class Game {
         requestAnimationFrame(() => this.update());
     }
 
-    
-
     public static getInstance() {
         if (! Game.instance) {
             Game.instance = new Game()
@@ -33,11 +31,24 @@ class Game {
         return Game.instance
     }
 
+    // private checkCollision() {
+    //     for(let item of this.gameObjects) {
+    //         for(let obj of this.gameObjects)  {
+    //             if (item === obj) {
+                    
+    //             } else {
+                    
+    //             }
+    //         }
+    //     }
+    // }
+
     private update(){
         for(let obj of this.gameObjects) {
             obj.update();
         }
         this.draw();
+        // this.checkCollision();
     }
 
     private draw() {

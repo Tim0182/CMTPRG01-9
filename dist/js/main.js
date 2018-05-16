@@ -42,11 +42,22 @@ var Meteor = (function () {
     function Meteor() {
         this.createMeteor();
     }
-    Meteor.prototype.getRect = function () {
-        return this.rectangle;
-    };
     Meteor.prototype.createMeteor = function () {
-        this.div = document.createElement("meteor");
+        var random = Math.floor(Math.random() * 3) + 1;
+        switch (random) {
+            case 1:
+                this.div = document.createElement("meteor");
+                this.div.className = "big1";
+                break;
+            case 2:
+                this.div = document.createElement("meteor");
+                this.div.className = "big2";
+                break;
+            case 3:
+                this.div = document.createElement("meteor");
+                this.div.className = "big3";
+                break;
+        }
         document.body.appendChild(this.div);
         this.x = Math.floor((Math.random() * window.innerWidth) + 1);
         this.y = Math.floor((Math.random() * window.innerHeight) + 1);
