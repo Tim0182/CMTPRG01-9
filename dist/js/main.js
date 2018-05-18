@@ -3,7 +3,7 @@ var Game = (function () {
         var _this = this;
         this.gameObjects = new Array();
         this.gameCollidables = new Array();
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 20; i++) {
             var meteor = new Meteor();
             this.gameObjects.push(meteor);
             this.gameCollidables.push(meteor);
@@ -33,20 +33,20 @@ var Game = (function () {
                     }
                 }
             }
-        }, 2000);
+        }, 0);
     };
     Game.prototype.intersects = function (a, b) {
-        return !(b.left > a.right ||
-            b.right < a.left ||
-            b.top > a.bottom ||
-            b.bottom < a.top);
+        return (a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom);
     };
     Game.prototype.update = function () {
         for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
             var obj = _a[_i];
             obj.update();
         }
-        cKeyboardInput.getInstance().inputLoop();
+        KeyboardInput.getInstance().inputLoop();
         this.checkCollision();
         this.draw();
     };
@@ -60,8 +60,8 @@ var Game = (function () {
     };
     return Game;
 }());
-var cKeyboardInput = (function () {
-    function cKeyboardInput() {
+var KeyboardInput = (function () {
+    function KeyboardInput() {
         var _this = this;
         this.keyCallback = {};
         this.keyDown = {};
@@ -90,17 +90,73 @@ var cKeyboardInput = (function () {
         document.addEventListener('keydown', this.keyboardDown);
         document.addEventListener('keyup', this.keyboardUp);
     }
-    cKeyboardInput.getInstance = function () {
-        if (!cKeyboardInput.instance) {
-            cKeyboardInput.instance = new cKeyboardInput();
+    KeyboardInput.getInstance = function () {
+        if (!KeyboardInput.instance) {
+            KeyboardInput.instance = new KeyboardInput();
         }
-        return cKeyboardInput.instance;
+        return KeyboardInput.instance;
     };
-    return cKeyboardInput;
+    return KeyboardInput;
 }());
 window.addEventListener("load", function () {
     Game.getInstance();
 });
+var Vector = (function () {
+    function Vector(x, y) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        var _this = this;
+        this.x = 0;
+        this.y = 0;
+        this.magnitude = function () {
+            return Math.sqrt(_this.x * _this.x + _this.y * _this.y);
+        };
+        this.magSq = function () {
+            return _this.x * _this.x + _this.y * _this.y;
+        };
+        this.normalize = function (magnitude) {
+            if (magnitude === void 0) { magnitude = 1; }
+            var len = Math.sqrt(_this.x * _this.x + _this.y * _this.y);
+            _this.x /= len;
+            _this.y /= len;
+            return _this;
+        };
+        this.zero = function () {
+            _this.x = 0;
+            _this.y = 0;
+        };
+        this.copy = function (point) {
+            _this.x = point.x;
+            _this.y = point.y;
+        };
+        this.rotate = function (radians) {
+            var cos = Math.cos(radians);
+            var sin = Math.sin(radians);
+            var x = (cos * _this.x) + (sin * _this.y);
+            var y = (cos * _this.y) - (sin * _this.x);
+            _this.x = x;
+            _this.y = y;
+        };
+        this.getAngle = function () {
+            return Math.atan2(_this.y, _this.x);
+        };
+        this.multiply = function (value) {
+            _this.x *= value;
+            _this.y *= value;
+        };
+        this.add = function (value) {
+            _this.x += value.x;
+            _this.y += value.y;
+        };
+        this.subtract = function (value) {
+            _this.x -= value.x;
+            _this.y -= value.y;
+        };
+        this.x = x;
+        this.y = y;
+    }
+    return Vector;
+}());
 var Meteor = (function () {
     function Meteor() {
         this.createMeteor();
@@ -141,23 +197,18 @@ var Meteor = (function () {
             this.y = 0 - this.div.clientHeight;
         }
     };
-    Meteor.prototype.kys = function () {
-        this.div.remove();
-    };
     Meteor.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
-            console.log('Meteor collide met een meteor');
         }
         else if (otherObject instanceof Player) {
-            console.log('Meteor collide met een player');
         }
     };
     Meteor.prototype.update = function () {
         this.move();
-        this.rectangle = this.div.getBoundingClientRect();
     };
     Meteor.prototype.draw = function () {
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
+        this.rectangle = this.div.getBoundingClientRect();
     };
     return Meteor;
 }());
@@ -178,12 +229,22 @@ var Player = (function () {
         this.y = window.innerHeight / 2 - this.div.clientHeight / 2;
         this.rotation = 0;
         this.shootBehavior = new SingleShot();
-        cKeyboardInput.getInstance().addKeycodeCallback(37, function () {
+        KeyboardInput.getInstance().addKeycodeCallback(37, function () {
             _this.turn(-_this.angle);
         });
-        cKeyboardInput.getInstance().addKeycodeCallback(39, function () {
+        KeyboardInput.getInstance().addKeycodeCallback(39, function () {
             _this.turn(+_this.angle);
         });
+        KeyboardInput.getInstance().addKeycodeCallback(38, function () {
+            _this.accelerate();
+        });
+        KeyboardInput.getInstance().addKeycodeCallback(40, function () {
+            _this.decelerate();
+        });
+    };
+    Player.prototype.accelerate = function () {
+    };
+    Player.prototype.decelerate = function () {
     };
     Player.prototype.setShootBehavior = function (behavior) {
         this.shootBehavior = behavior;
@@ -193,7 +254,6 @@ var Player = (function () {
     };
     Player.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
-            console.log('Player collide met een meteor');
         }
     };
     Player.prototype.update = function () {
@@ -203,6 +263,11 @@ var Player = (function () {
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
     };
     return Player;
+}());
+var PowerUp = (function () {
+    function PowerUp() {
+    }
+    return PowerUp;
 }());
 var MultiShot = (function () {
     function MultiShot() {

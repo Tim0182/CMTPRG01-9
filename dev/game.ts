@@ -10,7 +10,7 @@ class Game {
         this.gameObjects = new Array<GameObject>();
         this.gameCollidables = new Array<Icollidable>();
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 20; i++) {
             let meteor = new Meteor();
             this.gameObjects.push(meteor);
             this.gameCollidables.push(meteor);
@@ -37,6 +37,7 @@ class Game {
                 for(let item of this.gameCollidables) {
                     if(obj !== item) {
                         if(this.intersects(obj.getRect(), item.getRect())) {
+                            
                             obj.collide(item);
                         }
                     }
@@ -44,7 +45,7 @@ class Game {
             }
      
             
-        }, 2000);
+        }, 0);
     
     }
 
@@ -56,18 +57,18 @@ class Game {
     // }
 
     private intersects(a: ClientRect, b: ClientRect) {
-        return !(b.left > a.right || 
-            b.right < a.left || 
-            b.top > a.bottom ||
-            b.bottom < a.top);
-    } 
+        return (a.left <= b.right &&
+        b.left <= a.right &&
+        a.top <= b.bottom &&
+        b.top <= a.bottom)
+       } 
 
 
     private update(){
         for(let obj of this.gameObjects) {
             obj.update();
         }
-        cKeyboardInput.getInstance().inputLoop();
+        KeyboardInput.getInstance().inputLoop();
         this.checkCollision();
         this.draw();
     }

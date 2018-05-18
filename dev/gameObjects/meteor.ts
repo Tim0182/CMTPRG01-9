@@ -65,25 +65,21 @@ class Meteor implements GameObject, Icollidable {
         }
     }
 
-    private kys() : void {
-        this.div.remove();
-    }
-
     public collide(otherObject: Icollidable): void {
         if (otherObject instanceof Meteor) {
-            console.log('Meteor collide met een meteor');
+            
         } else if (otherObject instanceof Player) {
-            console.log('Meteor collide met een player');
+            
         }
     }
 
     public update() : void {
         this.move();
-        this.rectangle = this.div.getBoundingClientRect();
         
     }
 
     public draw(): void {
         this.div.style.transform = "translate("+this.x+"px, "+this.y+"px) rotate("+this.rotation+"deg)";
+        this.rectangle = this.div.getBoundingClientRect();
     }
 }

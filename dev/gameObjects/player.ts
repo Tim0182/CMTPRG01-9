@@ -26,14 +26,32 @@ class Player implements GameObject, Icollidable {
         this.shootBehavior = new SingleShot();
 
         // Left arrow key
-        cKeyboardInput.getInstance().addKeycodeCallback(37, () => {
+        KeyboardInput.getInstance().addKeycodeCallback(37, () => {
             this.turn(-this.angle);
         });
 
         // Right arrow key
-        cKeyboardInput.getInstance().addKeycodeCallback(39, () => {
+        KeyboardInput.getInstance().addKeycodeCallback(39, () => {
             this.turn(+this.angle);
         });
+
+        // Up arrow key
+        KeyboardInput.getInstance().addKeycodeCallback(38, () => {
+            this.accelerate();
+        });
+
+        // Down arrow key
+        KeyboardInput.getInstance().addKeycodeCallback(40, () => {
+            this.decelerate();
+        });
+
+    }
+
+    private accelerate() {
+
+    }
+
+    private decelerate() {
 
     }
 
@@ -47,7 +65,7 @@ class Player implements GameObject, Icollidable {
 
     public collide(otherObject: Icollidable): void {
         if (otherObject instanceof Meteor) {
-            console.log('Player collide met een meteor');
+            
         }
     }
 

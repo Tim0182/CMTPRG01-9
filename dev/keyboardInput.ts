@@ -1,17 +1,17 @@
-class cKeyboardInput {
+class KeyboardInput {
     public keyCallback: { [keycode: number]: () => void; } = {};
     public keyDown: { [keycode: number]: boolean; } = {};
-    private static instance : cKeyboardInput;
+    private static instance : KeyboardInput;
  
     private constructor() {
        document.addEventListener('keydown', this.keyboardDown);
        document.addEventListener('keyup', this.keyboardUp);
     }
     public static getInstance() {
-        if (! cKeyboardInput.instance) {
-            cKeyboardInput.instance = new cKeyboardInput()
+        if (! KeyboardInput.instance) {
+            KeyboardInput.instance = new KeyboardInput()
             }
-        return cKeyboardInput.instance
+        return KeyboardInput.instance
     }
     public keyboardDown = (event: KeyboardEvent): void => {
        event.preventDefault();
