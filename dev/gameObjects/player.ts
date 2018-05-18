@@ -28,7 +28,14 @@ class Player implements GameObject, Icollidable {
         cKeyboardInput.getInstance().addKeycodeCallback(37, () => {
             this.turn(-this.angle);
         });
+        cKeyboardInput.getInstance().addKeycodeCallback(65, () => {
+            this.turn(-this.angle);
+        });
+
         cKeyboardInput.getInstance().addKeycodeCallback(39, () => {
+            this.turn(+this.angle);
+        });
+        cKeyboardInput.getInstance().addKeycodeCallback(68, () => {
             this.turn(+this.angle);
         });
 

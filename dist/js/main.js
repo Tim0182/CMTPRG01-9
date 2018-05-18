@@ -193,7 +193,13 @@ var Player = (function () {
         cKeyboardInput.getInstance().addKeycodeCallback(37, function () {
             _this.turn(-_this.angle);
         });
+        cKeyboardInput.getInstance().addKeycodeCallback(65, function () {
+            _this.turn(-_this.angle);
+        });
         cKeyboardInput.getInstance().addKeycodeCallback(39, function () {
+            _this.turn(+_this.angle);
+        });
+        cKeyboardInput.getInstance().addKeycodeCallback(68, function () {
             _this.turn(+_this.angle);
         });
     };
