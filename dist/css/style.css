@@ -32,6 +32,18 @@ body * {
     height: 98px;
 }
 
+powerup {
+    background-image: url(./../img/powerup.png);
+    width: 32px;
+    height: 32px;
+}
+
+bullet {
+    background-image: url(./../img/bullet.png);
+    width: 54px;
+    height: 9px;
+}
+
 player {
     background-image: url(./../img/player.png);
     width: 84px;

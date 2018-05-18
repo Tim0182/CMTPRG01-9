@@ -7,7 +7,7 @@ class Player implements GameObject, Icollidable {
     private div : HTMLElement;
     private rectangle : ClientRect;
     private shootBehavior : IshootBehavior;
-    private maxSpeed: number = 5;
+    private maxSpeed: number = 7;
     
     public getRect(): ClientRect {
         return this.rectangle;
@@ -39,9 +39,9 @@ class Player implements GameObject, Icollidable {
             this.accelerate();
         });
 
-        // Down arrow key
-        KeyboardInput.getInstance().addKeycodeCallback(40, () => {
-            this.decelerate();
+        // Space bar
+        KeyboardInput.getInstance().addKeycodeCallback(32, () => {
+            this.shootWeapon();
         });
 
     }
@@ -49,10 +49,22 @@ class Player implements GameObject, Icollidable {
     private accelerate() {
         this.x += this.maxSpeed * Math.cos(this.rotation * Math.PI / 180);
         this.y += this.maxSpeed * Math.sin(this.rotation * Math.PI / 180);
-    }
 
-    private decelerate() {
+        if (this.x + this.div.clientWidth < 0) {
+            this.x = window.innerWidth;
+        }
 
+        if (this.x > window.innerWidth) {
+            this.x = 0 - this.div.clientWidth;
+        }
+        
+        if (this.y + this.div.clientHeight < 0) {
+            this.y = window.innerHeight;
+        }
+
+        if (this.y > window.innerHeight) {
+            this.y = 0 - this.div.clientHeight;
+        }
     }
 
     public setShootBehavior(behavior : IshootBehavior) {
@@ -63,17 +75,15 @@ class Player implements GameObject, Icollidable {
         this.rotation += angle;
 
         if (this.rotation >= 361) {
-            this.rotation = 10;
+            this.rotation = 5;
         } else if (this.rotation <= 0) {
             this.rotation = 360;
         }
-
-        console.log(this.rotation);
     }
 
     public collide(otherObject: Icollidable): void {
         if (otherObject instanceof Meteor) {
-            this.div.remove();
+
         }
     }
 

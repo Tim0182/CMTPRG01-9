@@ -16,6 +16,10 @@ class Game {
             this.gameCollidables.push(meteor);
           }
 
+          let powerup = new PowerUp();
+          this.gameObjects.push(powerup);
+          this.gameCollidables.push(powerup);
+
         this.player = new Player();
         this.gameObjects.push(this.player);
         this.gameCollidables.push(this.player);

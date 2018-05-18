@@ -8,6 +8,9 @@ var Game = (function () {
             this.gameObjects.push(meteor);
             this.gameCollidables.push(meteor);
         }
+        var powerup = new PowerUp();
+        this.gameObjects.push(powerup);
+        this.gameCollidables.push(powerup);
         this.player = new Player();
         this.gameObjects.push(this.player);
         this.gameCollidables.push(this.player);
@@ -101,61 +104,33 @@ var KeyboardInput = (function () {
 window.addEventListener("load", function () {
     Game.getInstance();
 });
-var Vector = (function () {
-    function Vector(x, y) {
-        if (x === void 0) { x = 0; }
-        if (y === void 0) { y = 0; }
-        var _this = this;
-        this.x = 0;
-        this.y = 0;
-        this.magnitude = function () {
-            return Math.sqrt(_this.x * _this.x + _this.y * _this.y);
-        };
-        this.magSq = function () {
-            return _this.x * _this.x + _this.y * _this.y;
-        };
-        this.normalize = function (magnitude) {
-            if (magnitude === void 0) { magnitude = 1; }
-            var len = Math.sqrt(_this.x * _this.x + _this.y * _this.y);
-            _this.x /= len;
-            _this.y /= len;
-            return _this;
-        };
-        this.zero = function () {
-            _this.x = 0;
-            _this.y = 0;
-        };
-        this.copy = function (point) {
-            _this.x = point.x;
-            _this.y = point.y;
-        };
-        this.rotate = function (radians) {
-            var cos = Math.cos(radians);
-            var sin = Math.sin(radians);
-            var x = (cos * _this.x) + (sin * _this.y);
-            var y = (cos * _this.y) - (sin * _this.x);
-            _this.x = x;
-            _this.y = y;
-        };
-        this.getAngle = function () {
-            return Math.atan2(_this.y, _this.x);
-        };
-        this.multiply = function (value) {
-            _this.x *= value;
-            _this.y *= value;
-        };
-        this.add = function (value) {
-            _this.x += value.x;
-            _this.y += value.y;
-        };
-        this.subtract = function (value) {
-            _this.x -= value.x;
-            _this.y -= value.y;
-        };
+var Bullet = (function () {
+    function Bullet(x, y, rotation) {
+        this.speed = 10;
         this.x = x;
         this.y = y;
+        this.rotation = rotation;
+        this.div = document.createElement("bullet");
+        document.body.appendChild(this.div);
     }
-    return Vector;
+    Bullet.prototype.collide = function (otherObject) {
+        if (otherObject instanceof Meteor) {
+        }
+    };
+    Bullet.prototype.move = function () {
+        this.x += this.speed * Math.cos(this.rotation * Math.PI / 180);
+        this.y += this.speed * Math.sin(this.rotation * Math.PI / 180);
+    };
+    Bullet.prototype.getRect = function () {
+        throw new Error("Method not implemented.");
+    };
+    Bullet.prototype.update = function () {
+        this.move();
+    };
+    Bullet.prototype.draw = function () {
+        this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
+    };
+    return Bullet;
 }());
 var Meteor = (function () {
     function Meteor() {
@@ -218,7 +193,7 @@ var Player = (function () {
         this.y = 0;
         this.rotation = 0;
         this.angle = 5;
-        this.maxSpeed = 5;
+        this.maxSpeed = 7;
         this.createPlayer();
     }
     Player.prototype.getRect = function () {
@@ -240,15 +215,25 @@ var Player = (function () {
         KeyboardInput.getInstance().addKeycodeCallback(38, function () {
             _this.accelerate();
         });
-        KeyboardInput.getInstance().addKeycodeCallback(40, function () {
-            _this.decelerate();
+        KeyboardInput.getInstance().addKeycodeCallback(32, function () {
+            _this.shootWeapon();
         });
     };
     Player.prototype.accelerate = function () {
         this.x += this.maxSpeed * Math.cos(this.rotation * Math.PI / 180);
         this.y += this.maxSpeed * Math.sin(this.rotation * Math.PI / 180);
-    };
-    Player.prototype.decelerate = function () {
+        if (this.x + this.div.clientWidth < 0) {
+            this.x = window.innerWidth;
+        }
+        if (this.x > window.innerWidth) {
+            this.x = 0 - this.div.clientWidth;
+        }
+        if (this.y + this.div.clientHeight < 0) {
+            this.y = window.innerHeight;
+        }
+        if (this.y > window.innerHeight) {
+            this.y = 0 - this.div.clientHeight;
+        }
     };
     Player.prototype.setShootBehavior = function (behavior) {
         this.shootBehavior = behavior;
@@ -256,16 +241,14 @@ var Player = (function () {
     Player.prototype.turn = function (angle) {
         this.rotation += angle;
         if (this.rotation >= 361) {
-            this.rotation = 10;
+            this.rotation = 5;
         }
         else if (this.rotation <= 0) {
             this.rotation = 360;
         }
-        console.log(this.rotation);
     };
     Player.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
-            this.div.remove();
         }
     };
     Player.prototype.shootWeapon = function () {
@@ -281,13 +264,35 @@ var Player = (function () {
 }());
 var PowerUp = (function () {
     function PowerUp() {
+        this.x = 0;
+        this.y = 0;
+        this.x = Math.floor((Math.random() * window.innerWidth) + 1) - 0.5;
+        this.y = Math.floor((Math.random() * window.innerHeight) + 1) - 0.5;
+        this.div = document.createElement("powerup");
+        document.body.appendChild(this.div);
     }
+    PowerUp.prototype.collide = function (otherObject) {
+        if (otherObject instanceof Player) {
+            otherObject.setShootBehavior(new MultiShot());
+            this.div.remove();
+        }
+    };
+    PowerUp.prototype.getRect = function () {
+        return this.rectangle;
+    };
+    PowerUp.prototype.update = function () {
+    };
+    PowerUp.prototype.draw = function () {
+        this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
+        this.rectangle = this.div.getBoundingClientRect();
+    };
     return PowerUp;
 }());
 var MultiShot = (function () {
     function MultiShot() {
     }
     MultiShot.prototype.shoot = function (x, y, rotation) {
+        console.log('multishot goes PEWPEWPEW');
     };
     return MultiShot;
 }());
@@ -295,6 +300,7 @@ var SingleShot = (function () {
     function SingleShot() {
     }
     SingleShot.prototype.shoot = function (x, y, rotation) {
+        new Bullet(x, y, rotation);
     };
     return SingleShot;
 }());
