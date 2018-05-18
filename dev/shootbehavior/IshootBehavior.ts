@@ -1,3 +1,3 @@
 interface IshootBehavior {
-    shoot() : void;
+    shoot(x : number, y : number, rotation : number) : void;
 }

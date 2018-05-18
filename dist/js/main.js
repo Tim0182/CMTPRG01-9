@@ -3,7 +3,7 @@ var Game = (function () {
         var _this = this;
         this.gameObjects = new Array();
         this.gameCollidables = new Array();
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 5; i++) {
             var meteor = new Meteor();
             this.gameObjects.push(meteor);
             this.gameCollidables.push(meteor);
@@ -214,8 +214,11 @@ var Meteor = (function () {
 }());
 var Player = (function () {
     function Player() {
-        this.angle = 6;
-        this.moving = false;
+        this.x = 0;
+        this.y = 0;
+        this.rotation = 0;
+        this.angle = 5;
+        this.maxSpeed = 5;
         this.createPlayer();
     }
     Player.prototype.getRect = function () {
@@ -227,7 +230,6 @@ var Player = (function () {
         document.body.appendChild(this.div);
         this.x = window.innerWidth / 2 - this.div.clientWidth / 2;
         this.y = window.innerHeight / 2 - this.div.clientHeight / 2;
-        this.rotation = 0;
         this.shootBehavior = new SingleShot();
         KeyboardInput.getInstance().addKeycodeCallback(37, function () {
             _this.turn(-_this.angle);
@@ -243,6 +245,8 @@ var Player = (function () {
         });
     };
     Player.prototype.accelerate = function () {
+        this.x += this.maxSpeed * Math.cos(this.rotation * Math.PI / 180);
+        this.y += this.maxSpeed * Math.sin(this.rotation * Math.PI / 180);
     };
     Player.prototype.decelerate = function () {
     };
@@ -251,10 +255,21 @@ var Player = (function () {
     };
     Player.prototype.turn = function (angle) {
         this.rotation += angle;
+        if (this.rotation >= 361) {
+            this.rotation = 10;
+        }
+        else if (this.rotation <= 0) {
+            this.rotation = 360;
+        }
+        console.log(this.rotation);
     };
     Player.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
+            this.div.remove();
         }
+    };
+    Player.prototype.shootWeapon = function () {
+        this.shootBehavior.shoot(this.x, this.y, this.rotation);
     };
     Player.prototype.update = function () {
         this.rectangle = this.div.getBoundingClientRect();
@@ -272,14 +287,14 @@ var PowerUp = (function () {
 var MultiShot = (function () {
     function MultiShot() {
     }
-    MultiShot.prototype.shoot = function () {
+    MultiShot.prototype.shoot = function (x, y, rotation) {
     };
     return MultiShot;
 }());
 var SingleShot = (function () {
     function SingleShot() {
     }
-    SingleShot.prototype.shoot = function () {
+    SingleShot.prototype.shoot = function (x, y, rotation) {
     };
     return SingleShot;
 }());

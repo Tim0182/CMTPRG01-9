@@ -10,7 +10,7 @@ class Game {
         this.gameObjects = new Array<GameObject>();
         this.gameCollidables = new Array<Icollidable>();
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 5; i++) {
             let meteor = new Meteor();
             this.gameObjects.push(meteor);
             this.gameCollidables.push(meteor);

@@ -34,8 +34,8 @@ body * {
 
 player {
     background-image: url(./../img/player.png);
-    width: 93px;
-    height: 84px;
+    width: 84px;
+    height: 93px;
 }
 
 /* Browser Sync script tag disabler */

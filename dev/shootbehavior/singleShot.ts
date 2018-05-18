@@ -1,5 +1,5 @@
 class SingleShot implements IshootBehavior {
-    public shoot(): void {
+    public shoot(x: number, y: number, rotation: number): void {
         
     }
 }
