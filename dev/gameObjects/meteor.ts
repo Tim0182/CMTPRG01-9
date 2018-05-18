@@ -1,4 +1,4 @@
-class Meteor implements GameObject {
+class Meteor implements GameObject, Icollidable {
     
     private x : number;
     private y : number;
@@ -11,12 +11,12 @@ class Meteor implements GameObject {
     private div : HTMLElement;
     private rectangle : ClientRect;
 
-    constructor() {
-        this.createMeteor();
-    }
-
     public getRect() : ClientRect {
         return this.rectangle;
+    }
+
+    constructor() {
+        this.createMeteor();
     }
 
     private createMeteor() {
@@ -77,10 +77,18 @@ class Meteor implements GameObject {
         }
     }
 
-    public kys() : void {
+    private kys() : void {
         this.div.remove();
     }
-    
+
+    public collide(otherObject: Icollidable): void {
+        if (otherObject instanceof Meteor) {
+            console.log('Meteor collide met een meteor');
+        } else if (otherObject instanceof Player) {
+            console.log('Meteor collide met een player');
+        }
+    }
+
     public update() : void {
         this.move();
         this.rectangle = this.div.getBoundingClientRect();
