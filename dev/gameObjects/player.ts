@@ -88,7 +88,11 @@ class Player implements GameObject, Icollidable {
     }
 
     private shootWeapon() {
-        this.shootBehavior.shoot(this.x, this.y, this.rotation);
+
+        let x = this.x + (this.div.clientWidth/2);
+        let y = this.y + (this.div.clientHeight/2);
+
+        this.shootBehavior.shoot(x, y, this.rotation);
     }
 
     public update(): void {

@@ -16,6 +16,9 @@ var Game = (function () {
         this.gameCollidables.push(this.player);
         requestAnimationFrame(function () { return _this.update(); });
     }
+    Game.prototype.addGameObject = function (obj) {
+        this.gameObjects.push(obj);
+    };
     Game.getInstance = function () {
         if (!Game.instance) {
             Game.instance = new Game();
@@ -107,11 +110,11 @@ window.addEventListener("load", function () {
 var Bullet = (function () {
     function Bullet(x, y, rotation) {
         this.speed = 10;
+        this.div = document.createElement("bullet");
+        document.body.appendChild(this.div);
         this.x = x;
         this.y = y;
         this.rotation = rotation;
-        this.div = document.createElement("bullet");
-        document.body.appendChild(this.div);
     }
     Bullet.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
@@ -252,7 +255,9 @@ var Player = (function () {
         }
     };
     Player.prototype.shootWeapon = function () {
-        this.shootBehavior.shoot(this.x, this.y, this.rotation);
+        var x = this.x + (this.div.clientWidth / 2);
+        var y = this.y + (this.div.clientHeight / 2);
+        this.shootBehavior.shoot(x, y, this.rotation);
     };
     Player.prototype.update = function () {
         this.rectangle = this.div.getBoundingClientRect();
@@ -292,7 +297,9 @@ var MultiShot = (function () {
     function MultiShot() {
     }
     MultiShot.prototype.shoot = function (x, y, rotation) {
-        console.log('multishot goes PEWPEWPEW');
+        Game.getInstance().addGameObject(new Bullet(x, y, rotation));
+        Game.getInstance().addGameObject(new Bullet(x, y, rotation - 25));
+        Game.getInstance().addGameObject(new Bullet(x, y, rotation + 25));
     };
     return MultiShot;
 }());
@@ -300,7 +307,7 @@ var SingleShot = (function () {
     function SingleShot() {
     }
     SingleShot.prototype.shoot = function (x, y, rotation) {
-        new Bullet(x, y, rotation);
+        Game.getInstance().addGameObject(new Bullet(x, y, rotation));
     };
     return SingleShot;
 }());

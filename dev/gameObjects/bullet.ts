@@ -9,12 +9,13 @@ class Bullet implements GameObject, Icollidable {
     private rectangle : ClientRect;
 
     constructor(x : number, y : number, rotation : number) {
-        this.x = x;
-        this.y = y;
-        this.rotation = rotation;
 
         this.div = document.createElement("bullet");
         document.body.appendChild(this.div);
+
+        this.x = x;
+        this.y = y;
+        this.rotation = rotation;
     }
 
     public collide(otherObject: Icollidable): void {

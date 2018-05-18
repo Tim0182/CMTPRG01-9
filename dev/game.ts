@@ -27,6 +27,10 @@ class Game {
         requestAnimationFrame(() => this.update());
     }
 
+    public addGameObject(obj : GameObject) {
+        this.gameObjects.push(obj);
+    }
+
     public static getInstance() {
         if (! Game.instance) {
             Game.instance = new Game()
@@ -52,13 +56,6 @@ class Game {
         }, 0);
     
     }
-
-    // private intersectRect(r1 : ClientRect, r2 : ClientRect) {
-    //     return !(r2.left > r1.right || 
-    //             r2.right < r1.left || 
-    //             r2.top > r1.bottom ||
-    //             r2.bottom < r1.top);
-    // }
 
     private intersects(a: ClientRect, b: ClientRect) {
         return (a.left <= b.right &&
