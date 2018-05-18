@@ -25,17 +25,13 @@ class Player implements GameObject, Icollidable {
         this.rotation = 0;
         this.shootBehavior = new SingleShot();
 
+        // Left arrow key
         cKeyboardInput.getInstance().addKeycodeCallback(37, () => {
             this.turn(-this.angle);
         });
-        cKeyboardInput.getInstance().addKeycodeCallback(65, () => {
-            this.turn(-this.angle);
-        });
 
+        // Right arrow key
         cKeyboardInput.getInstance().addKeycodeCallback(39, () => {
-            this.turn(+this.angle);
-        });
-        cKeyboardInput.getInstance().addKeycodeCallback(68, () => {
             this.turn(+this.angle);
         });
 
