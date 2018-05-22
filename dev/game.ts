@@ -23,6 +23,12 @@ class Game {
         requestAnimationFrame(() => this.update());
     }
 
+    public static getInstance() {
+        if (! Game.instance) {
+            Game.instance = new Game()
+            }
+        return Game.instance
+    }
 
     // If there are no more asteroids, return false
     private countAsteroids() {
@@ -33,13 +39,6 @@ class Game {
             break;
         }
         return false;
-    }
-
-    public static getInstance() {
-        if (! Game.instance) {
-            Game.instance = new Game()
-            }
-        return Game.instance
     }
 
     private checkCollision () {

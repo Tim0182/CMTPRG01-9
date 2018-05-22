@@ -13,6 +13,12 @@ var Game = (function () {
         this.gameObjects.push(this.player);
         requestAnimationFrame(function () { return _this.update(); });
     }
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    };
     Game.prototype.countAsteroids = function () {
         for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
             var obj = _a[_i];
@@ -22,12 +28,6 @@ var Game = (function () {
             break;
         }
         return false;
-    };
-    Game.getInstance = function () {
-        if (!Game.instance) {
-            Game.instance = new Game();
-        }
-        return Game.instance;
     };
     Game.prototype.checkCollision = function () {
         for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
@@ -111,6 +111,15 @@ var KeyboardInput = (function () {
         return KeyboardInput.instance;
     };
     return KeyboardInput;
+}());
+var Level = (function () {
+    function Level() {
+    }
+    Level.prototype.update = function () {
+    };
+    Level.prototype.draw = function () {
+    };
+    return Level;
 }());
 window.addEventListener("load", function () {
     Game.getInstance();

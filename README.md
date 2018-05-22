@@ -44,3 +44,4 @@ Coming soon™
 ## Authors
 
 * **Arno van Doesburg** - *development*
+* **Kenney.nl** - *graphics*
