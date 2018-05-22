@@ -7,10 +7,6 @@ class Game {
 
         this.level = new Level(1);
 
-        window.addEventListener('win', (e) => {
-        this.nextLevel();
-        })
-
         requestAnimationFrame(() => this.update());
     }
 
@@ -19,10 +15,6 @@ class Game {
             Game.instance = new Game()
             }
         return Game.instance
-    }
-
-    private nextLevel() {
-        this.level = new Level(LevelManager.getInstance().getNextLevel());
     }
 
     private update(){

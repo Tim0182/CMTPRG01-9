@@ -9,7 +9,7 @@ class Level {
         Level.instance = this;
 
 
-        // Spawn asteroids, amount equals level * 3
+        // Spawn asteroids, amount equals level * 4 - 1
         for (let i = 0; i < levelnr * 4 - 1; i++) {
             let meteor = new Meteor();
         }
@@ -21,6 +21,7 @@ class Level {
         let powerup = new PowerUp();
     }
 
+    // Execute appropriate functions when objects collide
     private checkCollision () {
         for(let obj of this._gameObjects) {
             for(let item of this._gameObjects) {
@@ -33,8 +34,9 @@ class Level {
         }
     }
 
+    // Look for any Meteor objects in the GameObjects Array
     private countAsteroids() {
-        for (let obj of Level.instance._gameObjects) {
+        for (let obj of this._gameObjects) {
             if (obj instanceof Meteor) {
                 return true;
             }
@@ -43,14 +45,15 @@ class Level {
         return false;
     }
 
-    private checkProgress() {
-        if (!this.countAsteroids()) {
-            let winEvent = new CustomEvent('win');
-            console.log('progress');
-            window.dispatchEvent(winEvent);
-        }
-    }
+    // Let Game know the level is cleared
+    // private checkProgress() {
+    //     if (!this.countAsteroids()) {
+    //         let winEvent = new CustomEvent('win');
+    //         window.dispatchEvent(winEvent);
+    //     }
+    // }
 
+    // Check if two objects are inside of each other using client rectangles
     private intersects(a: ClientRect, b: ClientRect) {
         return (a.left <= b.right &&
         b.left <= a.right &&
@@ -73,7 +76,7 @@ class Level {
         for (let obj of this._gameObjects) {
             obj.update();
         }
-        this.checkProgress();
+        // this.checkProgress();
     }
 
     public draw() {

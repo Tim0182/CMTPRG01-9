@@ -2,9 +2,6 @@ var Game = (function () {
     function Game() {
         var _this = this;
         this.level = new Level(1);
-        window.addEventListener('win', function (e) {
-            _this.nextLevel();
-        });
         requestAnimationFrame(function () { return _this.update(); });
     }
     Game.getInstance = function () {
@@ -12,9 +9,6 @@ var Game = (function () {
             Game.instance = new Game();
         }
         return Game.instance;
-    };
-    Game.prototype.nextLevel = function () {
-        this.level = new Level(LevelManager.getInstance().getNextLevel());
     };
     Game.prototype.update = function () {
         KeyboardInput.getInstance().inputLoop();
@@ -90,7 +84,7 @@ var Level = (function () {
         }
     };
     Level.prototype.countAsteroids = function () {
-        for (var _i = 0, _a = Level.instance._gameObjects; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
             var obj = _a[_i];
             if (obj instanceof Meteor) {
                 return true;
@@ -98,13 +92,6 @@ var Level = (function () {
             break;
         }
         return false;
-    };
-    Level.prototype.checkProgress = function () {
-        if (!this.countAsteroids()) {
-            var winEvent = new CustomEvent('win');
-            console.log('progress');
-            window.dispatchEvent(winEvent);
-        }
     };
     Level.prototype.intersects = function (a, b) {
         return (a.left <= b.right &&
@@ -124,7 +111,6 @@ var Level = (function () {
             var obj = _a[_i];
             obj.update();
         }
-        this.checkProgress();
     };
     Level.prototype.draw = function () {
         for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
