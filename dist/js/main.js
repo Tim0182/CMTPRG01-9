@@ -125,6 +125,9 @@ var LevelManager = (function () {
         }
         return LevelManager._instance;
     };
+    LevelManager.prototype.getCurrentLevel = function () {
+        return this._levelNumber;
+    };
     LevelManager.prototype.getNextLevel = function () {
         this._levelNumber++;
         return this._levelNumber;
