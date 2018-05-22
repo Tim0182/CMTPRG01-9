@@ -12,7 +12,7 @@ class Bullet implements GameObject {
 
         this.div = document.createElement("bullet");
         document.body.appendChild(this.div);
-        Game.getInstance().addGameObject(this);
+        // Game.getInstance().addGameObject(this);
 
         this.x = x;
         this.y = y;

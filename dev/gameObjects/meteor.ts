@@ -1,4 +1,4 @@
-class Meteor implements GameObject {
+class Meteor implements GameObject, Icollidable {
     
     private x : number;
     private y : number;
@@ -75,7 +75,6 @@ class Meteor implements GameObject {
 
     public removeAsteroid() : void {
         this.div.remove();
-        Game.getInstance().removeGameObject(this);
     }
 
     public update() : void {

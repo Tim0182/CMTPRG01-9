@@ -1,4 +1,4 @@
-class Player implements GameObject {
+class Player implements GameObject, Icollidable {
     
     private x : number = 0;
     private y : number = 0;
@@ -9,16 +9,17 @@ class Player implements GameObject {
     private shootBehavior : IshootBehavior;
     private maxSpeed: number = 7;
     private shootingCooldown : number = 0;
+    private _level : Level;
     
     public getRect(): ClientRect {
         return this.rectangle;
     }
 
-    constructor() {
-        this.createPlayer();
+    constructor(level : Level) {
+        this.createPlayer(level);
     }
 
-    private createPlayer() {
+    private createPlayer(level : Level) {
         this.div = document.createElement("player");
         document.body.appendChild(this.div);
         this.x = window.innerWidth / 2 - this.div.clientWidth / 2;
@@ -96,7 +97,7 @@ class Player implements GameObject {
         let x = this.x + (this.div.clientWidth/2);
         let y = this.y + (this.div.clientHeight/2);
 
-        this.shootBehavior.shoot(x, y, this.rotation);
+        this.shootBehavior.shoot(x, y, this.rotation, this._level);
     }
 
     public update(): void {
