@@ -1,4 +1,4 @@
-class Bullet implements GameObject, Icollidable {
+class Bullet implements GameObject {
 
     private x : number;
     private y : number;
@@ -12,15 +12,17 @@ class Bullet implements GameObject, Icollidable {
 
         this.div = document.createElement("bullet");
         document.body.appendChild(this.div);
+        Game.getInstance().addGameObject(this);
 
         this.x = x;
         this.y = y;
         this.rotation = rotation;
     }
 
-    public collide(otherObject: Icollidable): void {
+    public collide(otherObject: GameObject): void {
         if (otherObject instanceof Meteor) {
-
+            otherObject.removeAsteroid();
+            this.remove();
         }
     }
 
@@ -29,15 +31,39 @@ class Bullet implements GameObject, Icollidable {
         this.y += this.speed * Math.sin(this.rotation * Math.PI / 180);
     }
 
+    private checkBoundaries() {
+        if (this.x + this.div.clientWidth < 0) {
+            this.remove();
+        }
+
+        if (this.x > window.innerWidth) {
+            this.remove();
+        }
+        
+        if (this.y + this.div.clientHeight < 0) {
+            this.remove();
+        }
+
+        if (this.y > window.innerHeight) {
+            this.remove();
+        }
+    }
+
+    private remove() : void {
+        this.div.remove();
+    }
+
     public getRect(): ClientRect {
-        throw new Error("Method not implemented.");
+        return this.rectangle;
     }
 
     public update(): void {
         this.move();
+        this.checkBoundaries();
     }
 
     public draw(): void {
         this.div.style.transform = "translate("+this.x+"px, "+this.y+"px) rotate("+this.rotation+"deg)";
+        this.rectangle = this.div.getBoundingClientRect();
     }
 }

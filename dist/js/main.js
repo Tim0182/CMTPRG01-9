@@ -1,23 +1,27 @@
 var Game = (function () {
     function Game() {
         var _this = this;
+        this.level = 1;
         this.gameObjects = new Array();
-        this.gameCollidables = new Array();
         for (var i = 0; i < 5; i++) {
             var meteor = new Meteor();
             this.gameObjects.push(meteor);
-            this.gameCollidables.push(meteor);
         }
         var powerup = new PowerUp();
         this.gameObjects.push(powerup);
-        this.gameCollidables.push(powerup);
         this.player = new Player();
         this.gameObjects.push(this.player);
-        this.gameCollidables.push(this.player);
         requestAnimationFrame(function () { return _this.update(); });
     }
-    Game.prototype.addGameObject = function (obj) {
-        this.gameObjects.push(obj);
+    Game.prototype.countAsteroids = function () {
+        for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            if (obj instanceof Meteor) {
+                return true;
+            }
+            break;
+        }
+        return false;
     };
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -26,20 +30,24 @@ var Game = (function () {
         return Game.instance;
     };
     Game.prototype.checkCollision = function () {
-        var _this = this;
-        setTimeout(function () {
-            for (var _i = 0, _a = _this.gameCollidables; _i < _a.length; _i++) {
-                var obj = _a[_i];
-                for (var _b = 0, _c = _this.gameCollidables; _b < _c.length; _b++) {
-                    var item = _c[_b];
-                    if (obj !== item) {
-                        if (_this.intersects(obj.getRect(), item.getRect())) {
-                            obj.collide(item);
-                        }
+        for (var _i = 0, _a = this.gameObjects; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            for (var _b = 0, _c = this.gameObjects; _b < _c.length; _b++) {
+                var item = _c[_b];
+                if (obj !== item) {
+                    if (this.intersects(obj.getRect(), item.getRect())) {
+                        obj.collide(item);
                     }
                 }
             }
-        }, 0);
+        }
+    };
+    Game.prototype.addGameObject = function (obj) {
+        this.gameObjects.push(obj);
+    };
+    Game.prototype.removeGameObject = function (obj) {
+        var index = this.gameObjects.indexOf(obj);
+        this.gameObjects.splice(index, 1);
     };
     Game.prototype.intersects = function (a, b) {
         return (a.left <= b.right &&
@@ -53,7 +61,6 @@ var Game = (function () {
             obj.update();
         }
         KeyboardInput.getInstance().inputLoop();
-        this.checkCollision();
         this.draw();
     };
     Game.prototype.draw = function () {
@@ -62,6 +69,7 @@ var Game = (function () {
             var obj = _a[_i];
             obj.draw();
         }
+        this.checkCollision();
         requestAnimationFrame(function () { return _this.update(); });
     };
     return Game;
@@ -112,26 +120,48 @@ var Bullet = (function () {
         this.speed = 10;
         this.div = document.createElement("bullet");
         document.body.appendChild(this.div);
+        Game.getInstance().addGameObject(this);
         this.x = x;
         this.y = y;
         this.rotation = rotation;
     }
     Bullet.prototype.collide = function (otherObject) {
         if (otherObject instanceof Meteor) {
+            otherObject.removeAsteroid();
+            this.remove();
         }
     };
     Bullet.prototype.move = function () {
         this.x += this.speed * Math.cos(this.rotation * Math.PI / 180);
         this.y += this.speed * Math.sin(this.rotation * Math.PI / 180);
     };
+    Bullet.prototype.checkBoundaries = function () {
+        if (this.x + this.div.clientWidth < 0) {
+            this.remove();
+        }
+        if (this.x > window.innerWidth) {
+            this.remove();
+        }
+        if (this.y + this.div.clientHeight < 0) {
+            this.remove();
+        }
+        if (this.y > window.innerHeight) {
+            this.remove();
+        }
+    };
+    Bullet.prototype.remove = function () {
+        this.div.remove();
+    };
     Bullet.prototype.getRect = function () {
-        throw new Error("Method not implemented.");
+        return this.rectangle;
     };
     Bullet.prototype.update = function () {
         this.move();
+        this.checkBoundaries();
     };
     Bullet.prototype.draw = function () {
         this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
+        this.rectangle = this.div.getBoundingClientRect();
     };
     return Bullet;
 }());
@@ -181,6 +211,10 @@ var Meteor = (function () {
         else if (otherObject instanceof Player) {
         }
     };
+    Meteor.prototype.removeAsteroid = function () {
+        this.div.remove();
+        Game.getInstance().removeGameObject(this);
+    };
     Meteor.prototype.update = function () {
         this.move();
     };
@@ -197,6 +231,7 @@ var Player = (function () {
         this.rotation = 0;
         this.angle = 5;
         this.maxSpeed = 7;
+        this.shootingCooldown = 0;
         this.createPlayer();
     }
     Player.prototype.getRect = function () {
@@ -219,7 +254,10 @@ var Player = (function () {
             _this.accelerate();
         });
         KeyboardInput.getInstance().addKeycodeCallback(32, function () {
-            _this.shootWeapon();
+            if (_this.shootingCooldown <= 0) {
+                _this.shootWeapon();
+                _this.shootingCooldown = 3;
+            }
         });
     };
     Player.prototype.accelerate = function () {
@@ -260,6 +298,9 @@ var Player = (function () {
         this.shootBehavior.shoot(x, y, this.rotation);
     };
     Player.prototype.update = function () {
+        if (this.shootingCooldown > 0) {
+            this.shootingCooldown -= 0.1;
+        }
         this.rectangle = this.div.getBoundingClientRect();
     };
     Player.prototype.draw = function () {

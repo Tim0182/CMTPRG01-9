@@ -2,33 +2,37 @@ class Game {
 
     private static instance : Game;
     private gameObjects : Array<GameObject>;
-    private gameCollidables : Array<Icollidable>;
     private player : Player;
+    private level : number = 1;
     
     private constructor() {
 
         this.gameObjects = new Array<GameObject>();
-        this.gameCollidables = new Array<Icollidable>();
 
         for (let i = 0; i < 5; i++) {
             let meteor = new Meteor();
             this.gameObjects.push(meteor);
-            this.gameCollidables.push(meteor);
           }
 
           let powerup = new PowerUp();
           this.gameObjects.push(powerup);
-          this.gameCollidables.push(powerup);
 
         this.player = new Player();
         this.gameObjects.push(this.player);
-        this.gameCollidables.push(this.player);
 
         requestAnimationFrame(() => this.update());
     }
 
-    public addGameObject(obj : GameObject) {
-        this.gameObjects.push(obj);
+
+    // If there are no more asteroids, return false
+    private countAsteroids() {
+        for (let obj of this.gameObjects) {
+            if (obj instanceof Meteor) {
+                return true;
+            }
+            break;
+        }
+        return false;
     }
 
     public static getInstance() {
@@ -39,22 +43,24 @@ class Game {
     }
 
     private checkCollision () {
-        setTimeout(() => {
-
-            for(let obj of this.gameCollidables) {
-                for(let item of this.gameCollidables) {
-                    if(obj !== item) {
-                        if(this.intersects(obj.getRect(), item.getRect())) {
-                            
-                            obj.collide(item);
-                        }
+        for(let obj of this.gameObjects) {
+            for(let item of this.gameObjects) {
+                if(obj !== item) {
+                    if(this.intersects(obj.getRect(), item.getRect())) {
+                        obj.collide(item);
                     }
                 }
             }
-     
-            
-        }, 0);
-    
+        }
+    }
+
+    public addGameObject(obj : GameObject) {
+        this.gameObjects.push(obj);
+    }
+
+    public removeGameObject(obj : GameObject) {
+        let index = this.gameObjects.indexOf(obj);
+        this.gameObjects.splice(index, 1);
     }
 
     private intersects(a: ClientRect, b: ClientRect) {
@@ -63,14 +69,12 @@ class Game {
         a.top <= b.bottom &&
         b.top <= a.bottom)
        } 
-
-
+       
     private update(){
         for(let obj of this.gameObjects) {
             obj.update();
         }
         KeyboardInput.getInstance().inputLoop();
-        this.checkCollision();
         this.draw();
     }
 
@@ -78,6 +82,7 @@ class Game {
         for(let obj of this.gameObjects) {
             obj.draw();
         }
+        this.checkCollision();
         requestAnimationFrame(() => this.update());
     }
 

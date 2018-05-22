@@ -1,4 +1,4 @@
-class Player implements GameObject, Icollidable {
+class Player implements GameObject {
     
     private x : number = 0;
     private y : number = 0;
@@ -8,6 +8,7 @@ class Player implements GameObject, Icollidable {
     private rectangle : ClientRect;
     private shootBehavior : IshootBehavior;
     private maxSpeed: number = 7;
+    private shootingCooldown : number = 0;
     
     public getRect(): ClientRect {
         return this.rectangle;
@@ -41,7 +42,10 @@ class Player implements GameObject, Icollidable {
 
         // Space bar
         KeyboardInput.getInstance().addKeycodeCallback(32, () => {
-            this.shootWeapon();
+            if (this.shootingCooldown <= 0) {
+                this.shootWeapon();
+                this.shootingCooldown = 3;
+            }
         });
 
     }
@@ -81,7 +85,7 @@ class Player implements GameObject, Icollidable {
         }
     }
 
-    public collide(otherObject: Icollidable): void {
+    public collide(otherObject: GameObject): void {
         if (otherObject instanceof Meteor) {
 
         }
@@ -96,6 +100,9 @@ class Player implements GameObject, Icollidable {
     }
 
     public update(): void {
+        if (this.shootingCooldown > 0) {
+            this.shootingCooldown -= 0.1;
+        }
         this.rectangle = this.div.getBoundingClientRect();
     }
 

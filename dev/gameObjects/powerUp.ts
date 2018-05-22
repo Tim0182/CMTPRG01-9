@@ -1,4 +1,4 @@
-class PowerUp implements GameObject, Icollidable {
+class PowerUp implements GameObject {
 
     private x : number = 0;
     private y : number = 0;
@@ -13,10 +13,11 @@ class PowerUp implements GameObject, Icollidable {
         document.body.appendChild(this.div);
     }
 
-    public collide(otherObject: Icollidable): void {
+    public collide(otherObject: GameObject): void {
         if (otherObject instanceof Player) {
             otherObject.setShootBehavior(new MultiShot());
             this.div.remove();
+
         }
         
     }
