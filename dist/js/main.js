@@ -2,6 +2,9 @@ var Game = (function () {
     function Game() {
         var _this = this;
         this.level = new Level(1);
+        window.addEventListener('win', function (e) {
+            _this.nextLevel();
+        });
         requestAnimationFrame(function () { return _this.update(); });
     }
     Game.getInstance = function () {
@@ -11,7 +14,6 @@ var Game = (function () {
         return Game.instance;
     };
     Game.prototype.nextLevel = function () {
-        this.level = null;
         this.level = new Level(LevelManager.getInstance().getNextLevel());
     };
     Game.prototype.update = function () {
@@ -87,6 +89,23 @@ var Level = (function () {
             }
         }
     };
+    Level.prototype.countAsteroids = function () {
+        for (var _i = 0, _a = Level.instance._gameObjects; _i < _a.length; _i++) {
+            var obj = _a[_i];
+            if (obj instanceof Meteor) {
+                return true;
+            }
+            break;
+        }
+        return false;
+    };
+    Level.prototype.checkProgress = function () {
+        if (!this.countAsteroids()) {
+            var winEvent = new CustomEvent('win');
+            console.log('progress');
+            window.dispatchEvent(winEvent);
+        }
+    };
     Level.prototype.intersects = function (a, b) {
         return (a.left <= b.right &&
             b.left <= a.right &&
@@ -105,6 +124,7 @@ var Level = (function () {
             var obj = _a[_i];
             obj.update();
         }
+        this.checkProgress();
     };
     Level.prototype.draw = function () {
         for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
@@ -172,6 +192,7 @@ var Bullet = (function () {
     };
     Bullet.prototype.remove = function () {
         this.div.remove();
+        Level.removeGameObject(this);
     };
     Bullet.prototype.getRect = function () {
         return this.rectangle;
@@ -211,8 +232,8 @@ var Meteor = (function () {
         this.rotationSpeed = Math.random() * 2;
     };
     Meteor.prototype.move = function () {
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
+        this.x += this.xSpeed * 1;
+        this.y += this.ySpeed * 1;
         this.rotation += this.rotationSpeed;
         if (this.x + this.div.clientWidth < 0) {
             this.x = window.innerWidth;
@@ -235,6 +256,7 @@ var Meteor = (function () {
     };
     Meteor.prototype.removeAsteroid = function () {
         this.div.remove();
+        Level.removeGameObject(this);
     };
     Meteor.prototype.update = function () {
         this.move();

@@ -50,6 +50,7 @@ class Bullet implements GameObject {
 
     private remove() : void {
         this.div.remove();
+        Level.removeGameObject(this);
     }
 
     public getRect(): ClientRect {

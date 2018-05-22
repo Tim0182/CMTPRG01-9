@@ -45,8 +45,8 @@ class Meteor implements GameObject {
     }
 
     private move() {
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
+        this.x += this.xSpeed * 1; // add level modifier
+        this.y += this.ySpeed * 1; // add level modifier
         this.rotation += this.rotationSpeed;
 
         if (this.x + this.div.clientWidth < 0) {
@@ -76,6 +76,7 @@ class Meteor implements GameObject {
 
     public removeAsteroid() : void {
         this.div.remove();
+        Level.removeGameObject(this);
     }
 
     public update() : void {

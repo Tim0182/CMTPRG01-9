@@ -33,6 +33,24 @@ class Level {
         }
     }
 
+    private countAsteroids() {
+        for (let obj of Level.instance._gameObjects) {
+            if (obj instanceof Meteor) {
+                return true;
+            }
+            break;
+        }
+        return false;
+    }
+
+    private checkProgress() {
+        if (!this.countAsteroids()) {
+            let winEvent = new CustomEvent('win');
+            console.log('progress');
+            window.dispatchEvent(winEvent);
+        }
+    }
+
     private intersects(a: ClientRect, b: ClientRect) {
         return (a.left <= b.right &&
         b.left <= a.right &&
@@ -51,11 +69,11 @@ class Level {
         Level.instance._gameObjects.splice(index, 1);
     }
 
-
     public update() {
         for (let obj of this._gameObjects) {
             obj.update();
         }
+        this.checkProgress();
     }
 
     public draw() {
