@@ -1,4 +1,4 @@
-class Meteor implements GameObject, Icollidable {
+class Meteor implements GameObject {
     
     private x : number;
     private y : number;
@@ -17,6 +17,7 @@ class Meteor implements GameObject, Icollidable {
 
     constructor() {
         this.createMeteor();
+        Level.addGameObject(this);
     }
 
     private createMeteor() {

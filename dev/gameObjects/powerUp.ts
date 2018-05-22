@@ -11,13 +11,14 @@ class PowerUp implements GameObject {
 
         this.div = document.createElement("powerup");
         document.body.appendChild(this.div);
+
+        Level.addGameObject(this);
     }
 
     public collide(otherObject: GameObject): void {
         if (otherObject instanceof Player) {
             otherObject.setShootBehavior(new MultiShot());
             this.div.remove();
-
         }
         
     }

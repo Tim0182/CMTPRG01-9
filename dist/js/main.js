@@ -67,22 +67,38 @@ var KeyboardInput = (function () {
 var Level = (function () {
     function Level(levelnr) {
         this._gameObjects = new Array();
-        for (var i = 0; i < levelnr * 3; i++) {
+        Level.instance = this;
+        for (var i = 0; i < levelnr * 4 - 1; i++) {
             var meteor = new Meteor();
-            this._gameObjects.push(meteor);
         }
         var player = new Player(this);
-        this._gameObjects.push(player);
         var powerup = new PowerUp();
-        this._gameObjects.push(powerup);
     }
     Level.prototype.checkCollision = function () {
         for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
             var obj = _a[_i];
+            for (var _b = 0, _c = this._gameObjects; _b < _c.length; _b++) {
+                var item = _c[_b];
+                if (obj !== item) {
+                    if (this.intersects(obj.getRect(), item.getRect())) {
+                        obj.collide(item);
+                    }
+                }
+            }
         }
     };
-    Level.prototype.addGameObject = function (obj) {
-        this._gameObjects.push(obj);
+    Level.prototype.intersects = function (a, b) {
+        return (a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom);
+    };
+    Level.addGameObject = function (obj) {
+        Level.instance._gameObjects.push(obj);
+    };
+    Level.removeGameObject = function (obj) {
+        var index = Level.instance._gameObjects.indexOf(obj);
+        Level.instance._gameObjects.splice(index, 1);
     };
     Level.prototype.update = function () {
         for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
@@ -95,6 +111,7 @@ var Level = (function () {
             var obj = _a[_i];
             obj.draw();
         }
+        this.checkCollision();
     };
     return Level;
 }());
@@ -169,6 +186,7 @@ var Bullet = (function () {
 var Meteor = (function () {
     function Meteor() {
         this.createMeteor();
+        Level.addGameObject(this);
     }
     Meteor.prototype.getRect = function () {
         return this.rectangle;
@@ -233,6 +251,7 @@ var Player = (function () {
         this.maxSpeed = 7;
         this.shootingCooldown = 0;
         this.createPlayer(level);
+        Level.addGameObject(this);
     }
     Player.prototype.getRect = function () {
         return this.rectangle;
@@ -295,7 +314,7 @@ var Player = (function () {
     Player.prototype.shootWeapon = function () {
         var x = this.x + (this.div.clientWidth / 2);
         var y = this.y + (this.div.clientHeight / 2);
-        this.shootBehavior.shoot(x, y, this.rotation, this._level);
+        this.shootBehavior.shoot(x, y, this.rotation);
     };
     Player.prototype.update = function () {
         if (this.shootingCooldown > 0) {
@@ -316,6 +335,7 @@ var PowerUp = (function () {
         this.y = Math.floor((Math.random() * window.innerHeight) + 1) - 0.5;
         this.div = document.createElement("powerup");
         document.body.appendChild(this.div);
+        Level.addGameObject(this);
     }
     PowerUp.prototype.collide = function (otherObject) {
         if (otherObject instanceof Player) {
@@ -338,6 +358,9 @@ var MultiShot = (function () {
     function MultiShot() {
     }
     MultiShot.prototype.shoot = function (x, y, rotation) {
+        Level.addGameObject(new Bullet(x, y, rotation));
+        Level.addGameObject(new Bullet(x, y, rotation - 25));
+        Level.addGameObject(new Bullet(x, y, rotation + 25));
     };
     return MultiShot;
 }());
@@ -345,6 +368,7 @@ var SingleShot = (function () {
     function SingleShot() {
     }
     SingleShot.prototype.shoot = function (x, y, rotation) {
+        Level.addGameObject(new Bullet(x, y, rotation));
     };
     return SingleShot;
 }());

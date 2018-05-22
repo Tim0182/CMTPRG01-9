@@ -1,4 +1,4 @@
-class Player implements GameObject, Icollidable {
+class Player implements GameObject {
     
     private x : number = 0;
     private y : number = 0;
@@ -17,13 +17,16 @@ class Player implements GameObject, Icollidable {
 
     constructor(level : Level) {
         this.createPlayer(level);
+        Level.addGameObject(this);
     }
 
     private createPlayer(level : Level) {
         this.div = document.createElement("player");
         document.body.appendChild(this.div);
+
         this.x = window.innerWidth / 2 - this.div.clientWidth / 2;
         this.y = window.innerHeight / 2 - this.div.clientHeight / 2;
+
         this.shootBehavior = new SingleShot();
 
         // Left arrow key
@@ -97,7 +100,7 @@ class Player implements GameObject, Icollidable {
         let x = this.x + (this.div.clientWidth/2);
         let y = this.y + (this.div.clientHeight/2);
 
-        this.shootBehavior.shoot(x, y, this.rotation, this._level);
+        this.shootBehavior.shoot(x, y, this.rotation);
     }
 
     public update(): void {
