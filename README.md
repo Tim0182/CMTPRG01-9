@@ -26,11 +26,11 @@ To get the project up and running be sure to watch local files for changes by ex
 
 Next up we'll want our project to be reloaded everytime the built javascript is changed, this can be done by executing the following command.
 
+Make sure to execute this command in the /dist directory and not the root folder.
+
 ```
 browser-sync start --server --files "js/main.js"
 ```
-
-Make sure to execute this command in the /dist directory and not the root folder.
 
 ## Pull request
 

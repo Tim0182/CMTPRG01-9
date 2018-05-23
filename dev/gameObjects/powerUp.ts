@@ -17,7 +17,7 @@ class PowerUp implements GameObject {
 
     public collide(otherObject: GameObject): void {
         if (otherObject instanceof Player) {
-            otherObject.setShootBehavior(new MultiShot());
+            otherObject.setShootBehavior(new ClusterShot());
             this.div.remove();
         }
         

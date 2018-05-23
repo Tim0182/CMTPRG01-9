@@ -350,7 +350,7 @@ var PowerUp = (function () {
     }
     PowerUp.prototype.collide = function (otherObject) {
         if (otherObject instanceof Player) {
-            otherObject.setShootBehavior(new MultiShot());
+            otherObject.setShootBehavior(new ClusterShot());
             this.div.remove();
         }
     };
@@ -364,6 +364,17 @@ var PowerUp = (function () {
         this.rectangle = this.div.getBoundingClientRect();
     };
     return PowerUp;
+}());
+var ClusterShot = (function () {
+    function ClusterShot() {
+        this.i = 0;
+    }
+    ClusterShot.prototype.shoot = function (x, y, rotation) {
+        for (this.i = 0; this.i < 10; this.i++) {
+            Level.addGameObject(new Bullet(x, y, rotation = Math.floor(Math.random() * 361)));
+        }
+    };
+    return ClusterShot;
 }());
 var MultiShot = (function () {
     function MultiShot() {
